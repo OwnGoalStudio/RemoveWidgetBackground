@@ -1,1 +1,1 @@
-{ Filter = { Bundles = ( "com.apple.chronod" ); }; }
+{ Filter = { Bundles = ( "com.apple.chronod", "com.apple.springboard" ); }; }

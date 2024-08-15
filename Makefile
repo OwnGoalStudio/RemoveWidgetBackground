@@ -1,5 +1,5 @@
 TARGET := iphone:clang:latest:14.0
-INSTALL_TARGET_PROCESSES = chronod
+INSTALL_TARGET_PROCESSES = chronod SpringBoard
 
 include $(THEOS)/makefiles/common.mk
 

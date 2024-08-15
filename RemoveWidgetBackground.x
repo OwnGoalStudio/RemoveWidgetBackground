@@ -30,6 +30,42 @@ static CGFloat kMaxWidgetHeight = 150;
 - (id)xmlDescription;
 @end
 
+@interface SBHWidgetStackViewController : UIViewController
+@end
+
+@interface WGWidgetListItemViewController : UIViewController
+@end
+
+%group RWBSpringBoard
+
+%hook SBHWidgetStackViewController
+
+- (void)viewWillAppear:(BOOL)arg1 {
+    %orig;
+    UIView *firstChild = nil;
+    firstChild = self.view.subviews.firstObject;
+    firstChild = firstChild.subviews.firstObject;
+    if ([firstChild isKindOfClass:%c(MTMaterialView)]) {
+        [firstChild setAlpha:0];
+    }
+}
+
+%end
+
+%hook WGWidgetListItemViewController
+
+- (void)viewWillAppear:(BOOL)arg1 {
+    %orig;
+    UIView *firstChild = self.view.subviews.firstObject;
+    if ([firstChild isKindOfClass:%c(MTMaterialView)]) {
+        [firstChild setAlpha:0];
+    }
+}
+
+%end
+
+%end
+
 %group RWB
 
 %hook UIWindow
@@ -140,10 +176,16 @@ static CGFloat kMaxWidgetHeight = 150;
         @"com.apple.weather.widget", // 天气
     ]];
 
-    %init(RWB);
-    if (@available(iOS 16, *)) {
-        %init(RWB_16);
-    } else {
-        %init(RWB_15);
+    NSString *bundleIdentifier = [[NSBundle mainBundle] bundleIdentifier];
+    if ([bundleIdentifier isEqualToString:@"com.apple.springboard"]) {
+        %init(RWBSpringBoard);
+    }
+    else if ([bundleIdentifier isEqualToString:@"com.apple.chronod"]) {
+        %init(RWB);
+        if (@available(iOS 16, *)) {
+            %init(RWB_16);
+        } else {
+            %init(RWB_15);
+        }
     }
 }
