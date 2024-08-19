@@ -30,13 +30,54 @@ static CGFloat kMaxWidgetHeight = 150;
 - (id)xmlDescription;
 @end
 
+@interface SBHWidgetViewController : UIViewController
+@end
+
 @interface SBHWidgetStackViewController : UIViewController
 @end
 
 @interface WGWidgetListItemViewController : UIViewController
 @end
 
+@interface SBIcon : NSObject
+@end
+
+@interface SBIconView : NSObject
+@property (nonatomic, strong) SBIcon *icon;
+@end
+
 %group RWBSpringBoard
+
+%hook SBHWidgetViewController
+
+- (void)viewWillAppear:(BOOL)arg1 {
+    %orig;
+    UIView *firstChild = nil;
+    firstChild = self.view.subviews.firstObject;
+    if ([firstChild isKindOfClass:%c(UIVisualEffectView)]) {
+        [firstChild setAlpha:0];
+    }
+}
+
+%end
+
+%hook SBIconView
+
+- (double)iconLabelAlpha {
+    if (self.icon && [self.icon isKindOfClass:%c(SBWidgetIcon)]) {
+        return 0;
+    }
+    return %orig;
+}
+
+- (double)effectiveIconLabelAlpha {
+    if (self.icon && [self.icon isKindOfClass:%c(SBWidgetIcon)]) {
+        return 0;
+    }
+    return %orig;
+}
+
+%end
 
 %hook SBHWidgetStackViewController
 
@@ -87,7 +128,35 @@ static CGFloat kMaxWidgetHeight = 150;
             self.rwb_shouldHideBackground = @YES;
         }
     }
-    return %orig;
+    UIWindow *window = %orig;
+    if (window) {
+        [window setOverrideUserInterfaceStyle:UIUserInterfaceStyleDark];
+    }
+    return window;
+}
+
+%end
+
+%hook CHUISWidgetScene
+
+- (unsigned long long)colorScheme {
+    return 2;
+}
+
+%end
+
+%hook CHSMutableScreenshotPresentationAttributes
+
+- (long long)colorScheme {
+    return 2;
+}
+
+%end
+
+%hook CHSScreenshotPresentationAttributes
+
+- (long long)colorScheme {
+    return 2;
 }
 
 %end
