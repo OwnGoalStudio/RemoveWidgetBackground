@@ -8,6 +8,7 @@
 "Maximum Element Width" = "最大元素宽度";
 "Maximum Element Height" = "最大元素高度";
 "Enabled Applications" = "启用的应用程序";
+"Please note that not all widgets are supported. If you have any issues, do not contact us." = "请注意，不是所有小组件都受支持。如果你遇到任何问题，不要联系我们。";
 "Respring to Apply Changes" = "注销以应用更改";
 "Respring" = "注销";
 "Are you sure you want to respring your device?" = "你确定要注销设备吗？";

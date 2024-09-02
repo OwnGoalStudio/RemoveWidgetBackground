@@ -57,6 +57,8 @@
 			<string>PSGroupCell</string>
 			<key>label</key>
 			<string></string>
+			<key>footerText</key>
+			<string>Please note that not all widgets are supported. If you have any issues, do not contact us.</string>
 		</dict>
 		<dict>
 			<key>cell</key>
