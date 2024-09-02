@@ -3,6 +3,11 @@
 #import <HBLog.h>
 
 static BOOL kIsEnabled = YES;
+static BOOL kIsEnabledForSystemWidgets = YES;
+static BOOL kIsEnabledForMaterialView = YES;
+
+static BOOL kForceDarkMode = YES;
+
 static CGFloat kMaxWidgetWidth = 150;
 static CGFloat kMaxWidgetHeight = 150;
 static NSSet<NSString *> *kWidgetBundleIdentifiers = nil;
@@ -15,7 +20,29 @@ static void ReloadPrefs() {
 
     NSDictionary *settings = [prefs dictionaryRepresentation];
 
-    kIsEnabled = [settings[@"IsEnabled"] boolValue];
+    if (settings[@"IsEnabled"]) {
+        kIsEnabled = [settings[@"IsEnabled"] boolValue];
+    } else {
+        kIsEnabled = YES;
+    }
+
+    if (settings[@"IsSystemWidgetsEnabled"]) {
+        kIsEnabledForSystemWidgets = [settings[@"IsSystemWidgetsEnabled"] boolValue];
+    } else {
+        kIsEnabledForSystemWidgets = YES;
+    }
+
+    if (settings[@"IsMaterialViewEnabled"]) {
+        kIsEnabledForMaterialView = [settings[@"IsMaterialViewEnabled"] boolValue];
+    } else {
+        kIsEnabledForMaterialView = YES;
+    }
+
+    if (settings[@"ForceDarkMode"]) {
+        kForceDarkMode = [settings[@"ForceDarkMode"] boolValue];
+    } else {
+        kForceDarkMode = YES;
+    }
 
     if (settings[@"MaxWidgetWidth"]) {
         kMaxWidgetWidth = [settings[@"MaxWidgetWidth"] floatValue];
@@ -35,14 +62,20 @@ static void ReloadPrefs() {
         kWidgetBundleIdentifiers = [NSSet setWithArray:@[
             @"com.growing.topwidgetsplus.Widget", // Top Widgets
             @"dk.simonbs.Scriptable.ScriptableWidget", // Scriptable
+            @"wiki.qaq.trapp.LaunchPad", // 巨魔录音机
+        ]];
+    }
+
+    if (kIsEnabledForSystemWidgets) {
+        NSArray<NSString *> *kSystemWidgetBundleIdentifiers = @[
             @"com.apple.mobiletimer.WorldClockWidget", // 时钟
             @"com.apple.mobilecal.CalendarWidgetExtension", // 日历
             @"com.apple.mobilemail.MailWidgetExtension", // 邮件
             @"com.apple.ScreenTimeWidgetApplication.ScreenTimeWidgetExtension", // 使用时间
             @"com.apple.reminders.WidgetExtension", // 提醒事项
             @"com.apple.weather.widget", // 天气
-            @"wiki.qaq.trapp.LaunchPad", // 巨魔录音机
-        ]];
+        ];
+        kWidgetBundleIdentifiers = [kWidgetBundleIdentifiers setByAddingObjectsFromArray:kSystemWidgetBundleIdentifiers];
     }
 
     HBLogDebug(@"ReloadPrefs: %@", settings);
@@ -124,11 +157,13 @@ static void ReloadPrefs() {
 
 - (void)viewWillAppear:(BOOL)arg1 {
     %orig;
-    UIView *firstChild = nil;
-    firstChild = self.view.subviews.firstObject;
-    firstChild = firstChild.subviews.firstObject;
-    if ([firstChild isKindOfClass:%c(MTMaterialView)]) {
-        [firstChild setAlpha:0];
+    if (kIsEnabledForMaterialView) {
+        UIView *firstChild = nil;
+        firstChild = self.view.subviews.firstObject;
+        firstChild = firstChild.subviews.firstObject;
+        if ([firstChild isKindOfClass:%c(MTMaterialView)]) {
+            [firstChild setAlpha:0];
+        }
     }
 }
 
@@ -138,9 +173,11 @@ static void ReloadPrefs() {
 
 - (void)viewWillAppear:(BOOL)arg1 {
     %orig;
-    UIView *firstChild = self.view.subviews.firstObject;
-    if ([firstChild isKindOfClass:%c(MTMaterialView)]) {
-        [firstChild setAlpha:0];
+    if (kIsEnabledForMaterialView) {
+        UIView *firstChild = self.view.subviews.firstObject;
+        if ([firstChild isKindOfClass:%c(MTMaterialView)]) {
+            [firstChild setAlpha:0];
+        }
     }
 }
 
@@ -181,7 +218,10 @@ static void ReloadPrefs() {
 %hook CHUISWidgetScene
 
 - (unsigned long long)colorScheme {
-    return 2;
+    if (kForceDarkMode) {
+        return 2;
+    }
+    return %orig;
 }
 
 %end
@@ -189,7 +229,10 @@ static void ReloadPrefs() {
 %hook CHSMutableScreenshotPresentationAttributes
 
 - (long long)colorScheme {
-    return 2;
+    if (kForceDarkMode) {
+        return 2;
+    }
+    return %orig;
 }
 
 %end
@@ -197,7 +240,10 @@ static void ReloadPrefs() {
 %hook CHSScreenshotPresentationAttributes
 
 - (long long)colorScheme {
-    return 2;
+    if (kForceDarkMode) {
+        return 2;
+    }
+    return %orig;
 }
 
 %end

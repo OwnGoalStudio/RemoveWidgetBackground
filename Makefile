@@ -3,6 +3,10 @@ INSTALL_TARGET_PROCESSES = chronod SpringBoard
 
 include $(THEOS)/makefiles/common.mk
 
+SUBPROJECTS += RWBGPrefs
+
+include $(THEOS_MAKE_PATH)/aggregate.mk
+
 TWEAK_NAME := RemoveWidgetBackground
 
 RemoveWidgetBackground_FILES += RemoveWidgetBackground.x
