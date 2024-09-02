@@ -176,8 +176,6 @@
 			<string>PSGroupCell</string>
 			<key>label</key>
 			<string></string>
-			<key>footerText</key>
-			<string>Made with ♥ by OwnGoal Studio</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -199,6 +197,22 @@
 			</dict>
 			<key>isDestructive</key>
 			<true/>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string></string>
+			<key>footerText</key>
+			<string>Please support our paid works, thank you!</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>label</key>
+			<string>Made with ♥ by OwnGoal Studio</string>
+			<key>action</key>
+			<string>support</string>
 		</dict>
 	</array>
 	<key>title</key>
