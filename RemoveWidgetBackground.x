@@ -3,9 +3,50 @@
 #import <HBLog.h>
 
 static BOOL kIsEnabled = YES;
-static NSSet<NSString *> *kWidgetBundleIdentifiers = nil;
 static CGFloat kMaxWidgetWidth = 150;
 static CGFloat kMaxWidgetHeight = 150;
+static NSSet<NSString *> *kWidgetBundleIdentifiers = nil;
+
+static void ReloadPrefs() {
+    static NSUserDefaults *prefs = nil;
+    if (!prefs) {
+        prefs = [[NSUserDefaults alloc] initWithSuiteName:@"com.82flex.removewidgetbgprefs"];
+    }
+
+    NSDictionary *settings = [prefs dictionaryRepresentation];
+
+    kIsEnabled = [settings[@"IsEnabled"] boolValue];
+
+    if (settings[@"MaxWidgetWidth"]) {
+        kMaxWidgetWidth = [settings[@"MaxWidgetWidth"] floatValue];
+    } else {
+        kMaxWidgetWidth = 150;
+    }
+
+    if (settings[@"MaxWidgetHeight"]) {
+        kMaxWidgetHeight = [settings[@"MaxWidgetHeight"] floatValue];
+    } else {
+        kMaxWidgetHeight = 150;
+    }
+
+    if (settings[@"WidgetBundleIdentifiers"]) {
+        kWidgetBundleIdentifiers = [NSSet setWithArray:settings[@"WidgetBundleIdentifiers"]];
+    } else {
+        kWidgetBundleIdentifiers = [NSSet setWithArray:@[
+            @"com.growing.topwidgetsplus.Widget", // Top Widgets
+            @"dk.simonbs.Scriptable.ScriptableWidget", // Scriptable
+            @"com.apple.mobiletimer.WorldClockWidget", // 时钟
+            @"com.apple.mobilecal.CalendarWidgetExtension", // 日历
+            @"com.apple.mobilemail.MailWidgetExtension", // 邮件
+            @"com.apple.ScreenTimeWidgetApplication.ScreenTimeWidgetExtension", // 使用时间
+            @"com.apple.reminders.WidgetExtension", // 提醒事项
+            @"com.apple.weather.widget", // 天气
+            @"wiki.qaq.trapp.LaunchPad", // 巨魔录音机
+        ]];
+    }
+
+    HBLogDebug(@"ReloadPrefs: %@", settings);
+}
 
 @interface CHSWidget : NSObject
 @property (nonatomic, copy, readonly) NSString *extensionBundleIdentifier;
@@ -231,26 +272,19 @@ static CGFloat kMaxWidgetHeight = 150;
 %end
 
 %ctor {
+    ReloadPrefs();
+    CFNotificationCenterAddObserver(
+        CFNotificationCenterGetDarwinNotifyCenter(), 
+        NULL, 
+        (CFNotificationCallback)ReloadPrefs, 
+        CFSTR("com.82flex.removewidgetbgprefs/saved"), 
+        NULL, 
+        CFNotificationSuspensionBehaviorCoalesce
+    );
+
     if (!kIsEnabled) {
         return;
     }
-
-    kWidgetBundleIdentifiers = [NSSet setWithArray:@[
-        @"com.growing.topwidgetsplus.Widget", // Top Widgets
-        @"dk.simonbs.Scriptable.ScriptableWidget", // Scriptable
-        @"com.apple.mobiletimer.WorldClockWidget", // 时钟
-        @"com.apple.mobilecal.CalendarWidgetExtension", // 日历
-        @"com.apple.mobilemail.MailWidgetExtension", // 邮件
-        @"com.apple.ScreenTimeWidgetApplication.ScreenTimeWidgetExtension", // 使用时间
-        @"com.apple.reminders.WidgetExtension", // 提醒事项
-        @"com.apple.weather.widget", // 天气
-        @"wiki.qaq.trapp.LaunchPad", // 巨魔录音机
-        @"com.sina.weibo.WidgetExtension", // 微博
-        @"com.heweather.weatherapp.HeWeatherWidget", // 和风天气
-        @"net.colorfulclouds.app.FreeWidgetExtension", // 彩云天气
-        @"com.taobao.taobao4iphone.Taobao4iPhoneWidget", // 淘宝
-        @"com.alipay.iphoneclient.apwidgetextension", // 支付宝
-    ]];
 
     NSString *bundleIdentifier = [[NSBundle mainBundle] bundleIdentifier];
     if ([bundleIdentifier isEqualToString:@"com.apple.springboard"]) {
