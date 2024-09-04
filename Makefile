@@ -1,4 +1,4 @@
-ifeq ($(SIMULATOR),1)
+ifeq ($(THEOS_DEVICE_SIMULATOR),1)
 TARGET := simulator:clang:latest:14.0
 ARCHS := arm64
 else

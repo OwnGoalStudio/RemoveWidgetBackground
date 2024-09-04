@@ -1,4 +1,4 @@
-ifeq ($(SIMULATOR),1)
+ifeq ($(THEOS_DEVICE_SIMULATOR),1)
 TARGET := simulator:clang:latest:14.0
 ARCHS := arm64
 else
@@ -14,7 +14,7 @@ BUNDLE_NAME := RWBGPrefs
 RWBGPrefs_FILES += RWBGRootListController.m
 RWBGPrefs_CFLAGS += -fobjc-arc
 
-ifeq ($(SIMULATOR),1)
+ifeq ($(THEOS_DEVICE_SIMULATOR),1)
 RWBGPrefs_LDFLAGS += -FLibrary/_Simulator
 else
 RWBGPrefs_EXTRA_FRAMEWORKS += AltList

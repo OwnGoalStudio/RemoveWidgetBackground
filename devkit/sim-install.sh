@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if [ -z "$SIMULATOR" ]; then
+if [ -z "$THEOS_DEVICE_SIMULATOR" ]; then
   exit 0
 fi
 
