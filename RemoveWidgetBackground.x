@@ -74,6 +74,13 @@ static void ReloadPrefs() {
             @"com.apple.ScreenTimeWidgetApplication.ScreenTimeWidgetExtension", // 使用时间
             @"com.apple.reminders.WidgetExtension", // 提醒事项
             @"com.apple.weather.widget", // 天气
+            @"com.apple.Fitness.FitnessWidget", // 健身
+            @"com.apple.Passbook.PassbookWidgets", // 钱包
+            @"com.apple.Health.Sleep.SleepWidgetExtension", // 睡眠
+            @"com.apple.tips.TipsSwift", // 提示
+            @"com.apple.Music.MusicWidgets", // 音乐
+            @"com.apple.gamecenter.widgets.extension", // Game Center
+            @"com.apple.tv.TVWidgetExtension", // TV
         ];
         kWidgetBundleIdentifiers = [kWidgetBundleIdentifiers setByAddingObjectsFromArray:kSystemWidgetBundleIdentifiers];
     }
@@ -319,6 +326,10 @@ static void ReloadPrefs() {
 
 %ctor {
     ReloadPrefs();
+    if (!kIsEnabled) {
+        return;
+    }
+
     CFNotificationCenterAddObserver(
         CFNotificationCenterGetDarwinNotifyCenter(), 
         NULL, 
@@ -327,10 +338,6 @@ static void ReloadPrefs() {
         NULL, 
         CFNotificationSuspensionBehaviorCoalesce
     );
-
-    if (!kIsEnabled) {
-        return;
-    }
 
     NSString *bundleIdentifier = [[NSBundle mainBundle] bundleIdentifier];
     if ([bundleIdentifier isEqualToString:@"com.apple.springboard"]) {
