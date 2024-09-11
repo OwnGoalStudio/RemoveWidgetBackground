@@ -81,6 +81,7 @@ static void ReloadPrefs() {
             @"com.apple.Music.MusicWidgets", // 音乐
             @"com.apple.gamecenter.widgets.extension", // Game Center
             @"com.apple.tv.TVWidgetExtension", // TV
+            @"com.apple.news.widget", // Apple News
         ];
         kWidgetBundleIdentifiers = [kWidgetBundleIdentifiers setByAddingObjectsFromArray:kSystemWidgetBundleIdentifiers];
     }
@@ -139,6 +140,7 @@ static void ReloadPrefs() {
 
 %hook CHUISAvocadoHostViewController
 
+/* iOS 15 */
 - (void)_updateBackgroundMaterialAndColor {
     CHSWidget *widget = self.widget;
     if ([widget isKindOfClass:%c(CHSWidget)] &&
@@ -150,6 +152,7 @@ static void ReloadPrefs() {
     %orig;
 }
 
+/* iOS 15 */
 - (id)screenshotManager {
     CHSWidget *widget = self.widget;
     if ([widget isKindOfClass:%c(CHSWidget)] &&
@@ -216,6 +219,18 @@ static void ReloadPrefs() {
         return;
     }
     %orig;
+}
+
+/* iOS 16.0 to 16.2 */
+- (id)_snapshotImageFromURL:(id)arg1 {
+    CHSWidget *widget = self.widget;
+    if ([widget isKindOfClass:%c(CHSWidget)] &&
+        widget.extensionBundleIdentifier &&
+        [kWidgetBundleIdentifiers containsObject:widget.extensionBundleIdentifier])
+    {
+        return nil;
+    }
+    return %orig;
 }
 
 %end
