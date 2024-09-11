@@ -1,8 +1,8 @@
 Package: com.82flex.removewidgetbg
-Name: 移除小组件背景
+Name: Remove Widget Background
 Version: 1.0
 Architecture: iphoneos-arm
-Description: 移除小组件背景，让桌面更干净。
+Description: Remove the background of the widgets on the home screen.
 Maintainer: Lessica <82flex@gmail.com>
 Author: Lessica <82flex@gmail.com>
 Section: Tweaks
