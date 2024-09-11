@@ -114,6 +114,10 @@ static void ReloadPrefs() {
 @interface SBHWidgetViewController : UIViewController
 @end
 
+@interface CHUISWidgetHostViewController : SBHWidgetViewController
+@property (nonatomic, copy) CHSWidget *widget; 
+@end
+
 @interface SBHWidgetStackViewController : UIViewController
 @end
 
@@ -138,6 +142,28 @@ static void ReloadPrefs() {
     if ([firstChild isKindOfClass:%c(UIVisualEffectView)]) {
         [firstChild setAlpha:0];
     }
+}
+
+%end
+
+%hook CHUISWidgetHostViewController
+
+- (unsigned long long)colorScheme {
+    if (kForceDarkMode) {
+        return 2;
+    }
+    return %orig;
+}
+
+- (void)_updatePersistedSnapshotContent {
+    CHSWidget *widget = self.widget;
+    if ([widget isKindOfClass:%c(CHSWidget)] &&
+        widget.extensionBundleIdentifier &&
+        [kWidgetBundleIdentifiers containsObject:widget.extensionBundleIdentifier])
+    {
+        return;
+    }
+    %orig;
 }
 
 %end
