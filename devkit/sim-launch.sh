@@ -6,7 +6,7 @@ fi
 
 cd $(dirname $0)/..
 
-DEVICE_ID="5B06938E-E08D-4E4E-A99C-F375CB47565B"
+DEVICE_ID="C2975FF8-AFC5-4533-8C58-9DC0477499AF"
 XCODE_PATH=$(xcode-select -p)
 
 xcrun simctl boot $DEVICE_ID

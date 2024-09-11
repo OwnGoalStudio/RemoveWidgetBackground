@@ -155,7 +155,29 @@ static void ReloadPrefs() {
     return %orig;
 }
 
+- (void)_updateBackgroundMaterialAndColor {
+    CHSWidget *widget = self.widget;
+    if ([widget isKindOfClass:%c(CHSWidget)] &&
+        widget.extensionBundleIdentifier &&
+        [kWidgetBundleIdentifiers containsObject:widget.extensionBundleIdentifier])
+    {
+        return;
+    }
+    %orig;
+}
+
 - (void)_updatePersistedSnapshotContent {
+    CHSWidget *widget = self.widget;
+    if ([widget isKindOfClass:%c(CHSWidget)] &&
+        widget.extensionBundleIdentifier &&
+        [kWidgetBundleIdentifiers containsObject:widget.extensionBundleIdentifier])
+    {
+        return;
+    }
+    %orig;
+}
+
+- (void)_updatePersistedSnapshotContentIfNecessary {
     CHSWidget *widget = self.widget;
     if ([widget isKindOfClass:%c(CHSWidget)] &&
         widget.extensionBundleIdentifier &&
