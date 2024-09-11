@@ -114,7 +114,7 @@ static void ReloadPrefs() {
 @interface SBHWidgetViewController : UIViewController
 @end
 
-@interface CHUISWidgetHostViewController : SBHWidgetViewController
+@interface CHUISWidgetHostViewController : UIViewController
 @property (nonatomic, copy) CHSWidget *widget; 
 @end
 
@@ -131,7 +131,37 @@ static void ReloadPrefs() {
 @property (nonatomic, strong) SBIcon *icon;
 @end
 
+@interface CHUISAvocadoHostViewController : UIViewController
+@property (nonatomic, copy) CHSWidget *widget; 
+@end
+
 %group RWBSpringBoard
+
+%hook CHUISAvocadoHostViewController
+
+- (void)_updateBackgroundMaterialAndColor {
+    CHSWidget *widget = self.widget;
+    if ([widget isKindOfClass:%c(CHSWidget)] &&
+        widget.extensionBundleIdentifier &&
+        [kWidgetBundleIdentifiers containsObject:widget.extensionBundleIdentifier])
+    {
+        return;
+    }
+    %orig;
+}
+
+- (id)screenshotManager {
+    CHSWidget *widget = self.widget;
+    if ([widget isKindOfClass:%c(CHSWidget)] &&
+        widget.extensionBundleIdentifier &&
+        [kWidgetBundleIdentifiers containsObject:widget.extensionBundleIdentifier])
+    {
+        return nil;
+    }
+    return %orig;
+}
+
+%end
 
 %hook SBHWidgetViewController
 
