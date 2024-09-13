@@ -17,7 +17,8 @@ RWBGPrefs_CFLAGS += -fobjc-arc
 ifeq ($(THEOS_DEVICE_SIMULATOR),1)
 RWBGPrefs_LDFLAGS += -FLibrary/_Simulator
 else
-RWBGPrefs_EXTRA_FRAMEWORKS += AltList
+RWBGPrefs_LDFLAGS += -FFrameworks
+RWBGPrefs_FRAMEWORKS += AltList
 endif
 
 RWBGPrefs_FRAMEWORKS += UIKit
