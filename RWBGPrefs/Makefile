@@ -15,13 +15,14 @@ RWBGPrefs_FILES += RWBGRootListController.m
 RWBGPrefs_CFLAGS += -fobjc-arc
 
 ifeq ($(THEOS_DEVICE_SIMULATOR),1)
-RWBGPrefs_LDFLAGS += -FLibrary/_Simulator
+RWBGPrefs_LDFLAGS += -FFrameworks/_Simulator
+RWBGPrefs_LDFLAGS += -rpath /opt/simject
 else
 RWBGPrefs_LDFLAGS += -FFrameworks
-RWBGPrefs_FRAMEWORKS += AltList
 endif
 
 RWBGPrefs_FRAMEWORKS += UIKit
+RWBGPrefs_EXTRA_FRAMEWORKS += AltList
 RWBGPrefs_PRIVATE_FRAMEWORKS += CoreServices
 RWBGPrefs_PRIVATE_FRAMEWORKS += Preferences
 RWBGPrefs_INSTALL_PATH += /Library/PreferenceBundles

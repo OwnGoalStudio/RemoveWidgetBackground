@@ -1,5 +1,5 @@
 --- !tapi-tbd-v2
-archs:                 [ arm64, arm64e ]
+archs:                 [ x86_64, arm64 ]
 uuids:                 [ 'arm64: 5A5E5A01-3F7A-344A-884A-E7051F38DA03' ]
 platform:              ios
 flags:                 [ flat_namespace, not_app_extension_safe ]
@@ -8,7 +8,7 @@ current-version:       0
 compatibility-version: 0
 objc-constraint:       retain_release
 exports:
-  - archs:                [ arm64, arm64e ]
+  - archs:                [ x86_64, arm64 ]
     symbols:              [ _safe_getExecutablePath, _tagArrayContainsTag ]
     objc-classes:         [ _ATLApplicationListControllerBase,
                             _ATLApplicationListMultiSelectionController,
@@ -33,7 +33,7 @@ exports:
                             _ATLApplicationListSelectionController._selectedApplicationID,
                             _ATLApplicationSubtitleCell._customValueLabel ]
 undefineds:
-  - archs:                [ arm64, arm64e ]
+  - archs:                [ x86_64, arm64 ]
     symbols:              [ _NSClassFromString, _UIFontTextStyleBody,
                             __Block_object_assign, __Block_object_dispose,
                             __NSConcreteGlobalBlock, __NSConcreteStackBlock,
