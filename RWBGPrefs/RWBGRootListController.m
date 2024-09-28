@@ -150,4 +150,20 @@ void RWBGBatchKillAll(NSArray<NSString *> *processNames, BOOL softly) {
     }
 }
 
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.section == 5) {
+        PSSpecifier *specifier = [self specifierAtIndexPath:indexPath];
+        NSString *key = [specifier propertyForKey:@"cell"];
+        if ([key isEqualToString:@"PSButtonCell"]) {
+            UITableViewCell *cell = [super tableView:tableView cellForRowAtIndexPath:indexPath];
+            NSNumber *isDestructiveValue = [specifier propertyForKey:@"isDestructive"];
+            BOOL isDestructive = [isDestructiveValue boolValue];
+            cell.textLabel.textColor = isDestructive ? [UIColor systemRedColor] : [UIColor systemBlueColor];
+            cell.textLabel.highlightedTextColor = isDestructive ? [UIColor systemRedColor] : [UIColor systemBlueColor];
+            return cell;
+        }
+    }
+    return [super tableView:tableView cellForRowAtIndexPath:indexPath];
+}
+
 @end
