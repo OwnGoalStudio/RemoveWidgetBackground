@@ -1,3 +1,18 @@
-# 透明小组件
+# Remove Widget Background
 
-支持 iOS 15/16 的小组件背景移除插件。仅支持完整越狱。
+Remove the background of any app widgets on the home screen.
+
+App widgets are built with SwiftUI.  
+Since it's not an easy job to recognize the background view, we managed to remove them by restricting the size of drawing commands.
+
+It works pretty well with our [Colorful Wallpaper X](https://havoc.app/package/colorfulx). **Enjoy it!**
+
+## Features
+
+- Remove the background of some system widgets.
+- Remove the background of specified app widgets.
+- Force widgets to use dark mode (iOS 16 only).
+
+Note that **not all** app widgets are supported: some apps may draw their widgets entirely.  
+Do not send feedback email to us if you just find some incompatible app widgets. Thank you!
+
