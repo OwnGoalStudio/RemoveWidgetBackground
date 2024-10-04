@@ -11,7 +11,7 @@ It works pretty well with our [Colorful Wallpaper X](https://havoc.app/package/c
 
 - Remove the background of some system widgets.
 - Remove the background of specified app widgets.
-- Force widgets to use dark mode (iOS 16 only).
+- Force widgets to use dark mode.
 
 Note that **not all** app widgets are supported: some apps may draw their widgets entirely.  
 Do not send feedback email to us if you just find some incompatible app widgets. Thank you!

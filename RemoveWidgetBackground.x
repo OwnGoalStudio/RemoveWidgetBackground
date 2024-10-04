@@ -394,6 +394,17 @@ static void ReloadPrefs() {
 
 %end
 
+%hook UISCurrentUserInterfaceStyleValue
+
+- (long long)userInterfaceStyle {
+    if (kForceDarkMode) {
+        return 2;
+    }
+    return %orig;
+}
+
+%end
+
 %end
 
 %group RWB_16

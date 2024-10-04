@@ -113,7 +113,7 @@
 			<key>key</key>
 			<string>ForceDarkMode</string>
 			<key>label</key>
-			<string>Force Dark Mode (iOS 16)</string>
+			<string>Force Dark Mode</string>
 			<key>PostNotification</key>
 			<string>com.82flex.removewidgetbgprefs/saved</string>
 		</dict>
