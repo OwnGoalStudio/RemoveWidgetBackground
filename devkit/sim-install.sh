@@ -21,8 +21,7 @@ for BUNDLE_NAME in $BUNDLE_NAMES; do
   sudo rm -rf /opt/simject/PreferenceBundles/$BUNDLE_NAME.bundle
   sudo cp -rv $THEOS_OBJ_DIR/$BUNDLE_NAME.bundle /opt/simject/PreferenceBundles/$BUNDLE_NAME.bundle
   sudo codesign -f -s - /opt/simject/PreferenceBundles/$BUNDLE_NAME.bundle
+  sudo cp -rv $PWD/$BUNDLE_NAME/layout/Library/PreferenceLoader/Preferences/$BUNDLE_NAME /opt/simject/PreferenceLoader/Preferences/
 done
-
-sudo cp -rv $PWD/RWBGPrefs/layout/Library/PreferenceLoader/Preferences/RWBGPrefs /opt/simject/PreferenceLoader/Preferences/
 
 resim

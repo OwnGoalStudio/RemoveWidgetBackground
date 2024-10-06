@@ -2,7 +2,7 @@ export PACKAGE_VERSION := 1.7
 
 ifeq ($(THEOS_DEVICE_SIMULATOR),1)
 TARGET := simulator:clang:latest:14.0
-ARCHS := arm64
+ARCHS := arm64 x86_64
 else
 TARGET := iphone:clang:latest:14.0
 INSTALL_TARGET_PROCESSES := chronod SpringBoard
