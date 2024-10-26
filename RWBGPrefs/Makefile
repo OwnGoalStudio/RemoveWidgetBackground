@@ -15,10 +15,18 @@ RWBGPrefs_FILES += RWBGRootListController.m
 RWBGPrefs_CFLAGS += -fobjc-arc
 
 ifeq ($(THEOS_DEVICE_SIMULATOR),1)
-RWBGPrefs_LDFLAGS += -FFrameworks/_Simulator
+RWBGPrefs_LDFLAGS += -FFrameworks/_simulator
 RWBGPrefs_LDFLAGS += -rpath /opt/simject
 else
+ifeq ($(THEOS_PACKAGE_SCHEME),rootless)
+RWBGPrefs_LDFLAGS += -FFrameworks/_rootless
+else
+ifeq ($(THEOS_PACKAGE_SCHEME),roothide)
+RWBGPrefs_LDFLAGS += -FFrameworks/_roothide
+else
 RWBGPrefs_LDFLAGS += -FFrameworks
+endif
+endif
 endif
 
 RWBGPrefs_FRAMEWORKS += UIKit
