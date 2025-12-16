@@ -1,5 +1,7 @@
+.cache
 .theos
 packages
+compile_commands.json
 /Artworks/IconDrawer
 
 # Created by https://www.toptal.com/developers/gitignore/api/swift,macos,xcode

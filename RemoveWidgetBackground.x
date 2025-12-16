@@ -86,7 +86,10 @@ static void ReloadPrefs() {
         kWidgetBundleIdentifiers = [kWidgetBundleIdentifiers setByAddingObjectsFromArray:kSystemWidgetBundleIdentifiers];
     }
 
-    HBLogDebug(@"ReloadPrefs: %@", settings);
+    HBLogDebug(@"ReloadPrefs: isEnabled=%d, isEnabledForSystemWidgets=%d, isEnabledForMaterialView=%d, "
+               @"forceDarkMode=%d, maxWidgetWidth=%.1f, maxWidgetHeight=%.1f, widgetBundleIdentifiers=%@",
+               kIsEnabled, kIsEnabledForSystemWidgets, kIsEnabledForMaterialView, kForceDarkMode, kMaxWidgetWidth,
+               kMaxWidgetHeight, kWidgetBundleIdentifiers);
 }
 
 @interface CHSWidget : NSObject
@@ -445,9 +448,11 @@ static void ReloadPrefs() {
 
     NSString *bundleIdentifier = [[NSBundle mainBundle] bundleIdentifier];
     if ([bundleIdentifier isEqualToString:@"com.apple.springboard"]) {
+        HBLogDebug(@"Initialized in SpringBoard");
         %init(RWBSpringBoard);
     }
     else if ([bundleIdentifier isEqualToString:@"com.apple.chronod"]) {
+        HBLogDebug(@"Initialized in chronod");
         %init(RWB);
         if (@available(iOS 16, *)) {
             %init(RWB_16);
