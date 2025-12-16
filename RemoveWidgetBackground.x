@@ -371,7 +371,11 @@ static void ReloadPrefs() {
         [NSThread currentThread].threadDictionary[@"rwb_shouldHideBackground"] = @YES;
         %orig;
         [NSThread currentThread].threadDictionary[@"rwb_shouldHideBackground"] = nil;
-        [NSThread currentThread].threadDictionary[@"rwb_didSkipFirst"] = nil;
+        if (@available(iOS 17, *)) {
+            [NSThread currentThread].threadDictionary[@"rwb_didSkipFirstN"] = nil;
+        } else {
+            [NSThread currentThread].threadDictionary[@"rwb_didSkipFirst"] = nil;
+        }
         return;
     }
     %orig;
@@ -415,13 +419,41 @@ static void ReloadPrefs() {
 %hook RBShape
 
 - (void)setRect:(CGRect)arg1 {
-    if ([NSThread currentThread].threadDictionary[@"rwb_shouldHideBackground"]) {
+    NSMutableDictionary *threadDict = [NSThread currentThread].threadDictionary;
+    if (threadDict[@"rwb_shouldHideBackground"]) {
         if (arg1.size.width > kMaxWidgetWidth && arg1.size.height > kMaxWidgetHeight) {
-            if ([[NSThread currentThread].threadDictionary[@"rwb_didSkipFirst"] boolValue]) {
+            if ([threadDict[@"rwb_didSkipFirst"] boolValue]) {
                 %orig(CGRectZero);
                 return;
             }
-            [NSThread currentThread].threadDictionary[@"rwb_didSkipFirst"] = @YES;
+            threadDict[@"rwb_didSkipFirst"] = @YES;
+        }
+    }
+    %orig;
+}
+
+%end
+
+%end
+
+%group RWB_17
+
+%hook RBShape
+
+- (void)setRect:(CGRect)arg1 {
+    NSMutableDictionary *threadDict = [NSThread currentThread].threadDictionary;
+    if (threadDict[@"rwb_shouldHideBackground"]) {
+        if (arg1.size.width > kMaxWidgetWidth && arg1.size.height > kMaxWidgetHeight) {
+            NSNumber *firstN = threadDict[@"rwb_didSkipFirstN"];
+            if ([firstN intValue] > 1) {
+                %orig(CGRectZero);
+                return;
+            }
+            if (!firstN) {
+                threadDict[@"rwb_didSkipFirstN"] = @(0);
+            } else {
+                threadDict[@"rwb_didSkipFirstN"] = @([firstN intValue] + 1);
+            }
         }
     }
     %orig;
@@ -451,10 +483,12 @@ static void ReloadPrefs() {
         HBLogDebug(@"Initialized in SpringBoard");
         %init(RWBSpringBoard);
     }
-    else if ([bundleIdentifier isEqualToString:@"com.apple.chronod"]) {
-        HBLogDebug(@"Initialized in chronod");
+    else if ([bundleIdentifier isEqualToString:@"com.apple.chronod"] || [bundleIdentifier hasPrefix:@"com.apple.chrono.WidgetRenderer-"]) {
+        HBLogDebug(@"Initialized in chronod (or WidgetRenderer)");
         %init(RWB);
-        if (@available(iOS 16, *)) {
+        if (@available(iOS 17, *)) {
+            %init(RWB_17);
+        } else if (@available(iOS 16, *)) {
             %init(RWB_16);
         } else {
             %init(RWB_15);
