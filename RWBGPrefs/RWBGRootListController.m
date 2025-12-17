@@ -140,7 +140,12 @@ void RWBGBatchKillAll(NSArray<NSString *> *processNames, BOOL softly) {
 }
 
 - (void)respring {
-    RWBGBatchKillAll(@[ @"SpringBoard", @"chronod" ], YES);
+    RWBGBatchKillAll(
+        @[
+            @"SpringBoard", @"chronod", @"com.apple.chrono.WidgetRenderer-Default",
+            @"com.apple.chrono.WidgetRenderer-CarPlay"
+        ],
+        YES);
 }
 
 - (void)support {
