@@ -367,17 +367,26 @@ static void ReloadPrefs() {
 
 - (void)display {
     UIView *view = (UIView *)self.delegate;
+
     if ([view isKindOfClass:[UIView class]] && view.window.rwb_shouldHideBackground.boolValue) {
         [NSThread currentThread].threadDictionary[@"rwb_shouldHideBackground"] = @YES;
+        if (@available(iOS 17, *)) {
+            if (self.opaque)
+                self.opaque = NO;
+        }
+
         %orig;
+
         [NSThread currentThread].threadDictionary[@"rwb_shouldHideBackground"] = nil;
         if (@available(iOS 17, *)) {
             [NSThread currentThread].threadDictionary[@"rwb_didSkipFirstN"] = nil;
         } else {
             [NSThread currentThread].threadDictionary[@"rwb_didSkipFirst"] = nil;
         }
+
         return;
     }
+
     %orig;
 }
 
@@ -449,10 +458,12 @@ static void ReloadPrefs() {
                 %orig(CGRectZero);
                 return;
             }
-            if (!firstN) {
-                threadDict[@"rwb_didSkipFirstN"] = @(0);
-            } else {
-                threadDict[@"rwb_didSkipFirstN"] = @([firstN intValue] + 1);
+            int newN = firstN ? [firstN intValue] + 1 : 0;
+            threadDict[@"rwb_didSkipFirstN"] = @(newN);
+            if (newN == 1) {
+                // Bypass the first background rect
+                %orig(CGRectZero);
+                return;
             }
         }
     }
